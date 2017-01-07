@@ -41,34 +41,3 @@ end
 desc 'Deploy by building and pushing Docker image, registering with iron.io'
 task deploy: ['docker:build', 'docker:push', 'iron:register']
 
-namespace :queue do
-  require 'yaml'
-  require 'aws-sdk'
-
-  config = OpenStruct.new YAML.load(File.read('config.yml'))
-
-  desc "Create SQS queue for Shoryuken"
-  task :create do
-    sqs = Aws::SQS::Client.new(region: config.AWS_REGION)
-
-    begin
-      queue = sqs.create_queue(queue_name: config.UPDATE_QUEUE)
-      puts "Queue #{config.UPDATE_QUEUE} created on #{config.AWS_REGION}"
-    rescue => e
-      puts "Error creating queue: #{e}"
-    end
-  end
-
-  task :purge do
-    config = FaceGroupAPI.config
-    sqs = Aws::SQS::Client.new(region: config.AWS_REGION)
-
-    begin
-      url = sqs.get_queue_url({ queue_name: config.UPDATE_QUEUE })
-      queue = sqs.purge_queue({ queue_url: url.queue_url})
-      puts "Queue #{config.UPDATE_QUEUE} purged"
-    rescue => e
-      puts "Error purging queue: #{e}"
-    end
-  end
-end

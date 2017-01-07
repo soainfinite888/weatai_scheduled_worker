@@ -9,7 +9,7 @@ class UpdateWorker
 
   def self.call
     puts "UPDATING..."
-    HTTP.post('http://localhost:9292/api/v0.1/weather')
+    HTTP.post('http://weataiapi.herokuapp.com/api/v0.1/weather')
   end
 end
 

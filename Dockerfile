@@ -6,9 +6,9 @@ ADD Gemfile .
 ADD Gemfile.lock .
 RUN bundle install
 
-ADD groups_update_worker.rb .
+ADD weathers_update_worker.rb .
 
-ENTRYPOINT ruby groups_update_worker.rb
+ENTRYPOINT ruby weathers_update_worker.rb
 
 # build image with:
 #   docker build --rm --force-rm -t soumyaray/facegroup_groups_update:0.2.0 .
